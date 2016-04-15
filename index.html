@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="testAngularApp">
+<head>
+	<meta charset="UTF-8">
+	<title>Test</title>
+	<link rel="stylesheet" href="./assets/libs/leaflet/leaflet.css">
+  <link rel="stylesheet" href="./assets/css/style.css">
+	<script src="./assets/libs/geojson/kiev.js"></script>
+	<script src="./assets/libs/angular/angular.js"></script>
+	<script src="./app.js"></script>
+	<script src="./controllers/storePointsCtrl.js"></script>
+	<script src="./controllers/carPointsCtrl.js"></script>
+	<script src="./controllers/mapPointsCtrl.js"></script>
+</head>
+<body>
+<div id="mapid"></div>
+<div id="IDmapPointsCtrl" ng-cloak ng-controller="mapPointsCtrl">
+    <div id="IDcarPointsCtrl" ng-controller="carPointsCtrl" >
+        <table ng-if="showHideCarCarrying" class="table">
+        <thead>
+          <tr><td><p>Машины с грузоподъемностью больше чем у выбранной</p></td></tr>
+        </thead>
+          <tbody>
+            <tr><td><button type="button" class="btn btn-default" ng-click="closeCarCarrying()" >Закрыть</button></td></tr>
+            <tr ng-repeat="carPoint in carPoints | filter : filterCarrying | orderBy : orderOfDistance">
+              <td>{{carPoint.title}}</td>
+              <td>{{carPoint.carrying}}</td>
+            </tr>
+          </tbody>
+      </table> 
+
+      <table ng-if="showHideStoreCar" class="table">
+        <thead><tr><td><p>3 ближайшие машины отсортированные по расстоянию до выбранного склада.</p></td></tr></thead>
+        <tbody>
+        <tr><td><button type="button" class="btn btn-default" ng-click="closeStoreCar()" >Закрыть</button></td></tr>
+          <tr ng-repeat="carPoint in carPoints | orderBy : orderOfDistance | limitTo: 3">
+            <td>{{carPoint.title}}</td>
+            <td>{{carPoint.carrying}}</td>
+          </tr>
+        </tbody>
+      </table> 
+    </div>
+
+    <div id="IDstorePointsCtrl" ng-controller="storePointsCtrl" >
+      <div class="storeForm" ng-if="showHideStoreForm">
+          <div class="modal-header">
+             <h4 class="modal-title" id="myModalLabel">Введите новые координаты</h4>
+          </div>
+          <div class="modal-body">
+              <form name="myForm" novalidate ng-submit="updateLatLing(updateStorePoint, myForm.$valid)">
+                  <div class="well">
+                      <div class="form-group">
+                          <label>Lat:</label>
+                          <input name="lat" type="text" class="form-control" required ng-pattern="matchPattern" ng-model= "updateStorePoint.lat">
+                      </div>
+                      <div class="error" ng-show="showError">
+                          {{getError(myForm.lat.$error)}} 
+                      </div>
+      
+                      <div class="form-group">
+                          <label>Lng:</label>
+                          <input name="lng" ng-pattern="matchPattern" type="text" class="form-control" required ng-model= "updateStorePoint.lng">
+                      </div>
+                      <div class="error" ng-show="showError">
+                          {{getError(myForm.lng.$error)}}
+                      </div>
+      
+                      <button type="submit" class="btn btn-primary btn-block">OK</button>
+                  </div>
+              </form>
+          </div>
+          <button type="button" ng-click="closeForm()" class="btn btn-default" >Закрыть</button>
+          </div>
+       </div>
+</div>
+
+
+	<script src="./assets/libs/leaflet/leaflet.js"></script>
+	<script src="./assets/js/script.js"></script>
+
+	<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+</body>
+</html>
